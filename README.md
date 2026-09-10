@@ -6,3 +6,4 @@ Stefania Gomez, I would like to learn how to do a portfolio and do video games.
 ## Labs
 - Lab 2 — connected this repository to my laptop
 - Lab 2 — edited this line on my laptop
+- Lab 2 — edited this line in the browser

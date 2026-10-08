@@ -37,7 +37,7 @@ body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 5rem;/ *hand-edited by SGomez*/
+  gap: 5rem;/*hand-edited by SGomez*/
   min-height: 78vh;
   padding: 5rem 0;
 }
@@ -85,10 +85,34 @@ h1 {
   text-decoration: none;
 }
 
-.button:hover,
-.button:focus-visible {
-  border-color: var(--accent-dark);
+.button:not(:disabled):hover {
+  border-color: #6e2da8;
   background: var(--accent-dark);
+  box-shadow: 0 0.3rem 0.8rem rgba(32, 33, 36, 0.2);
+}
+
+.button:not(:disabled):focus-visible {
+  outline: 0.2rem solid var(--accent-dark);
+  outline-offset: 0.2rem;
+}
+
+.button:not(:disabled):active {
+  border-color: #542080;
+  background: #542080;
+  box-shadow: inset 0 0.15rem 0.35rem rgba(32, 33, 36, 0.3);
+  transform: translateY(0.1rem);
+}
+
+.button:disabled {
+  border-color: #b8b8b8;
+  background: #dedede;
+  color: #6b6b6b;
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.button--disabled {
+  margin-left: 0.5rem;
 }
 
 .avatar {

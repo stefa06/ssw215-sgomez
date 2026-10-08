@@ -7,13 +7,19 @@
   --ink: #202124;
   --muted: #5c6670;
   --paper: #f7f4ee;
-  --accent : hsl(331, 55%, 62%);
+  --accent: hsl(331, 55%, 62%);
   --accent-dark: #893eca;
   --line: #deced8;
+  --card: #ffffff;
+}
+
+html {
+  scroll-behavior: auto;
 }
 
 body {
   margin: 0;
+  overflow-x: hidden;
   background: var(--paper);
   color: var(--ink);
   font-family: Georgia, "Times New Roman", serif;
@@ -22,16 +28,16 @@ body {
 
 .hero,
 .projects,
-footer {
+.site-footer {
   width: min(100% - 3rem, 68rem);
   margin: 0 auto;
 }
 
 .hero {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 4rem;
+  gap: 5rem;/ *hand-edited by SGomez*/
   min-height: 78vh;
   padding: 5rem 0;
 }
@@ -86,11 +92,12 @@ h1 {
 }
 
 .avatar {
+  display: block;
   width: 240px;
   height: 240px;
+  border: 8px solid #ffffff;
   border-radius: 50%;
   object-fit: cover;
-  border: 8px solid #fff;
   box-shadow: 0 1rem 2rem rgba(32, 33, 36, 0.12);
 }
 
@@ -115,20 +122,32 @@ ul {
   list-style: none;
 }
 
-li {
-  padding: 1.25rem;
-  border: 1px solid var(--line);
-  background: #fff;
-  font-size: 1.15rem;
+.project-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
 }
 
-footer {
+
+/*hand-edited by SGomez*/
+.card {
+  padding: 2.00rem;
+  border: 1px solid var(--line);
+  background: var(--card);
+  font-size: 1.15rem;
+}
+/*hand-edited by SGomez*/
+.card.featured {
+  padding: 4.00rem;
+}
+
+.site-footer {
   padding: 2rem 0 3rem;
   border-top: 1px solid var(--line);
   font-family: Arial, sans-serif;
 }
 
-footer a {
+.site-footer a {
   color: var(--accent-dark);
   font-weight: 700;
 }
@@ -136,7 +155,7 @@ footer a {
 @media (max-width: 767px) {
   .hero,
   .projects,
-  footer {
+  .site-footer {
     width: min(100% - 2rem, 40rem);
   }
 
@@ -150,6 +169,7 @@ footer a {
   .avatar {
     width: 180px;
     height: 180px;
+    margin: 0 auto;
   }
 
   ul {

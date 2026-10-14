@@ -1,9 +1,6 @@
-* {
-  box-sizing: border-box;
-}
+*, *::before, *::after { box-sizing: border-box; }
 
-:root {
-  color-scheme: light;
+.page {
   --ink: #202124;
   --muted: #5c6670;
   --paper: #f7f4ee;
@@ -11,50 +8,67 @@
   --accent-dark: #893eca;
   --line: #deced8;
   --card: #ffffff;
-}
-
-html {
-  scroll-behavior: auto;
-}
-
-body {
   margin: 0;
-  overflow-x: hidden;
   background: var(--paper);
   color: var(--ink);
   font-family: Georgia, "Times New Roman", serif;
   line-height: 1.5;
 }
 
+.site-nav,
 .hero,
 .projects,
 .site-footer {
-  width: min(100% - 3rem, 68rem);
+  width: min(calc(100% - 3rem), 68rem);
   margin: 0 auto;
+}
+
+.site-nav {
+  padding: 1.5rem 0 0;
+  font-family: Arial, sans-serif;
+}
+
+.site-nav__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-nav__link,
+.site-footer__link {
+  color: var(--accent-dark);
+  font-weight: 700;
 }
 
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 5rem;/*hand-edited by SGomez*/
-  min-height: 78vh;
-  padding: 5rem 0;
+  gap: 4rem;
+  min-height: 72vh;
+  padding: 4rem 0;
 }
 
 .hero__content {
   max-width: 40rem;
 }
 
-h1,
-h2,
-p {
+.hero__title,
+.section-title,
+.subtitle,
+.bio,
+.card__title,
+.site-footer__text {
   margin-top: 0;
 }
 
-h1 {
+.hero__title {
   margin-bottom: 1rem;
-  font-size: clamp(3.2rem, 8vw, 6.5rem);
+  font-size: 5rem;
   line-height: 0.95;
   letter-spacing: -0.04em;
 }
@@ -73,6 +87,12 @@ h1 {
   font-size: 1.15rem;
 }
 
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 .button {
   display: inline-block;
   padding: 0.8rem 1.2rem;
@@ -82,13 +102,17 @@ h1 {
   font-family: Arial, sans-serif;
   font-size: 0.9rem;
   font-weight: 700;
-  text-decoration: none;
+}
+
+.button--primary {
+  cursor: pointer;
 }
 
 .button:not(:disabled):hover {
   border-color: #6e2da8;
-  background: var(--accent-dark);
+  background: #6e2da8;
   box-shadow: 0 0.3rem 0.8rem rgba(32, 33, 36, 0.2);
+  transform: translateY(-0.1rem);
 }
 
 .button:not(:disabled):focus-visible {
@@ -111,15 +135,11 @@ h1 {
   opacity: 0.75;
 }
 
-.button--disabled {
-  margin-left: 0.5rem;
-}
-
 .avatar {
   display: block;
-  width: 240px;
-  height: 240px;
-  border: 8px solid #ffffff;
+  width: 15rem;
+  height: 15rem;
+  border: 0.5rem solid #ffffff;
   border-radius: 50%;
   object-fit: cover;
   box-shadow: 0 1rem 2rem rgba(32, 33, 36, 0.12);
@@ -128,41 +148,61 @@ h1 {
 .projects {
   padding: 4rem 0;
   border-top: 1px solid var(--line);
+  scroll-margin-top: 2rem;
 }
 
-h2 {
+.section-title {
   margin-bottom: 1.5rem;
   font-size: 2.5rem;
   line-height: 1;
 }
 
-ul {
+.project-filter {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  max-width: 42rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  gap: 0.5rem;
+  max-width: 28rem;
+  margin-bottom: 0.75rem;
+}
+
+.project-filter__label {
+  font-weight: 700;
+}
+
+.project-filter__input {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.25rem;
+  font: inherit;
+}
+
+.project-count {
+  margin: 0 0 1rem;
+  color: var(--muted);
 }
 
 .project-cards {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
-
-/*hand-edited by SGomez*/
 .card {
-  padding: 2.00rem;
+  flex: 1 1 18rem;
+  min-width: 0;
+  padding: 2rem;
   border: 1px solid var(--line);
   background: var(--card);
   font-size: 1.15rem;
 }
-/*hand-edited by SGomez*/
-.card.featured {
-  padding: 2.00rem;
+
+.card__title {
+  margin-bottom: 0;
+  font-size: 1.25rem;
+}
+
+.hidden {
+  display: none;
 }
 
 .site-footer {
@@ -171,32 +211,36 @@ ul {
   font-family: Arial, sans-serif;
 }
 
-.site-footer a {
-  color: var(--accent-dark);
-  font-weight: 700;
+.site-footer__text {
+  margin-bottom: 0;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 48rem) {
+  .site-nav,
   .hero,
   .projects,
   .site-footer {
-    width: min(100% - 2rem, 40rem);
+    width: min(calc(100% - 2rem), 40rem);
   }
 
   .hero {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 2.5rem;
     min-height: auto;
-    padding: 4rem 0;
+    padding: 3rem 0;
+  }
+
+  .hero__title {
+    font-size: 3rem;
   }
 
   .avatar {
-    width: 180px;
-    height: 180px;
+    width: 11.25rem;
+    height: 11.25rem;
     margin: 0 auto;
   }
 
-  ul {
-    grid-template-columns: 1fr;
+  .card {
+    flex-basis: 100%;
   }
 }

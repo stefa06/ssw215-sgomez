@@ -23,8 +23,8 @@ filterInput.addEventListener("input", () => {
   let visibleCount = 0;
 
   for (const card of projectCards) {
-    const matches = card.textContent.toLocaleLowerCase().includes(query);
-    card.classList.toggle("hidden", !matches);
+    const matches = card.textContent.toLowerCase().includes(query);//hand-edited by SG//
+    card.classList.toggle("is-hidden", !matches);//hand-eited by SG//
     if (matches) {
       visibleCount += 1;
     }

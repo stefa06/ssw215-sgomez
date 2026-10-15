@@ -20,6 +20,11 @@ this bio: "<I'm from Spain and Colombia. I love pasta>".
 - Social link: GitHub (<your GitHub profile URL>) MUST open in a new tab
 (target="_blank").
 - The page MUST use semantic landmarks: one <header>, one <nav>, one <main>, one
+- The "See my projects" button MUST have four visually distinct states: :hover, :focus-
+visible, :active, and :disabled.
+- A second button labelled "Contact me (coming soon)" MUST be present with the HTML
+disabled attribute, and MUST NOT look clickable.
+- All four state rules MUST live in style.css.
 <footer>, and each content group inside its own <section> with a heading.
 - There MUST be exactly one <h1>, and heading levels MUST NOT skip (h1 then h2 then h3).
 - <nav> MUST contain a link to the projects section and a link to my GitHub profile.
@@ -32,5 +37,9 @@ flex, flex-wrap: wrap and gap.
 - [x] No inline style="..." attributes anywhere in index.html.
 - [x] No ID selectors (#something) in style.css.
 - [x] No horizontal scrollbar when the browser is narrowed to 375px.
+- [ ] Hovering the primary button visibly changes it.
+- [ ] Tabbing to the primary button shows a clear focus ring.
+- [ ] Holding the mouse down on it looks different again.
+- [ ] The disabled button looks unavailable and does not react to hover.git add SPEC.md
 ## 5. Audit Protocol
 - Inspect the generated code line by line with `git diff --staged` before committing.

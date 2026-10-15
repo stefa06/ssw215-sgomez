@@ -7,9 +7,9 @@
   --ink: #202124;
   --muted: #5c6670;
   --paper: #f7f4ee;
-  --accent: #d85b3f;
-  --accent-dark: #a83f2b;
-  --line: #ded8ce;
+  --accent : hsl(331, 55%, 62%);
+  --accent-dark: #893eca;
+  --line: #deced8;
 }
 
 body {
@@ -55,7 +55,7 @@ h1 {
 
 .subtitle {
   margin-bottom: 1rem;
-  color: var(--accent-dark);
+  color: var(--accent);
   font-size: 1.35rem;
   font-style: italic;
 }
@@ -71,8 +71,8 @@ h1 {
   display: inline-block;
   padding: 0.8rem 1.2rem;
   border: 1px solid var(--accent);
-  background: var(--accent);
-  color: #fff;
+  background: var(--accent-dark);
+  color: #ffffff;
   font-family: Arial, sans-serif;
   font-size: 0.9rem;
   font-weight: 700;

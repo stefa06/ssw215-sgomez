@@ -70,7 +70,7 @@
   margin-bottom: 1rem;
   font-size: 5rem;
   line-height: 0.95;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.2rem;
 }
 
 .subtitle {
@@ -201,7 +201,7 @@
   font-size: 1.25rem;
 }
 
-.is-hidden {
+.hidden {
   display: none;
 }
 

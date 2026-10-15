@@ -1,14 +1,8 @@
-const projectsButton = document.querySelector("[data-projects-button]");
 const projectsSection = document.getElementById("projects");
 
-if (!(projectsButton instanceof HTMLButtonElement) || !(projectsSection instanceof HTMLElement)) {
-  throw new Error("The projects button and section are required.");
+if (!(projectsSection instanceof HTMLElement)) {
+  throw new Error("The projects section is required.");
 }
-
-projectsButton.addEventListener("click", () => {
-  window.location.hash = projectsSection.id;
-  projectsSection.focus({ preventScroll: true });
-});
 
 const filterInput = document.getElementById("filter-input");
 const projectCount = document.getElementById("project-count");
@@ -23,12 +17,17 @@ filterInput.addEventListener("input", () => {
   let visibleCount = 0;
 
   for (const card of projectCards) {
-    const matches = card.textContent.toLowerCase().includes(query);//hand-edited by SG
-    card.classList.toggle("is-hidden", !matches);//hand-edited by SG
+    const matches = card.textContent.toLocaleLowerCase().includes(query);
+    card.classList.toggle("hidden", !matches);
     if (matches) {
       visibleCount += 1;
     }
   }
 
   projectCount.textContent = `Showing ${visibleCount} of ${projectCards.length} projects`;
+  console.log(
+    projectCards
+      .filter((card) => !card.classList.contains("hidden"))
+      .map((card) => card.querySelector(".card__title").textContent.trim()),
+  );
 });

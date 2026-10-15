@@ -12,6 +12,11 @@ engineering student.
 border-box; }`.
 - Spacing and font sizes MUST use rem. px MAY be used only for borders.
 - Styling MUST use class selectors. ID selectors MUST NOT be used for styling.
+- All JavaScript MUST live in ./app.js. index.html MUST NOT contain inline onclick
+attributes or any <script> block with code inside it.
+- app.js MUST be loaded from <head> with <script src="./app.js" defer></script>.
+- Showing and hiding MUST be done by adding and removing a CSS class. app.js MUST NOT set
+styles directly through .style.
 ## 3. UI Content & Interface Contract
 - Hero header: my full name "<Stefania Gomez>", the subtitle "<I dance professionaly >", and
 this bio: "<I'm from Spain and Colombia. I love pasta>".
@@ -25,12 +30,26 @@ this bio: "<I'm from Spain and Colombia. I love pasta>".
 - <nav> MUST contain a link to the projects section and a link to my GitHub profile.
 - Each project MUST be an <article class="card"> inside a container that uses display:
 flex, flex-wrap: wrap and gap.
+- Above the projects there MUST be a text input with id="filter-input", and a <label>
+bound to it reading "Filter projects".
+- There MUST be an element with id="project-count" that reads "Showing X of Y projects".
+- As the user types, cards whose text does not contain what was typed MUST be hidden by
+adding the class "hidden", and the count MUST update immediately — no button, no page
+reload.
+- Emptying the box MUST bring every card back.
+- style.css MUST define .hidden { display: none; }.
+- Each time the filter runs, app.js MUST print the titles of the projects that are still
+visible to the console with console.log.
+
 ## 4. Acceptance Checklist
-- [x] Exactly one <h1>, one <header>, one <nav>, one <main>, one <footer>.
-- [x] Every project is an <article class="card"> inside a flex container with gap.
-- [x] style.css begins with the box-sizing reset.
-- [x] No inline style="..." attributes anywhere in index.html.
-- [x] No ID selectors (#something) in style.css.
-- [x] No horizontal scrollbar when the browser is narrowed to 375px.
+- [ ] app.js is loaded from <head> with defer, and index.html has no inline onclick and
+no code inside a <script> tag.
+- [ ] Typing in the filter box hides and shows cards live, without pressing anything.
+- [ ] The "Showing X of Y projects" line updates as I type.
+- [ ] Emptying the box brings every card back.
+- [ ] app.js contains no .style assignments — hiding is done with the "hidden" class.
+- [ ] The DevTools Console shows no red errors when the page loads.
+- [ ] Typing in the filter prints the matching project titles in the Console, and the
+list gets shorter as I type.
 ## 5. Audit Protocol
 - Inspect the generated code line by line with `git diff --staged` before committing.

@@ -18,6 +18,20 @@ projects_db = [
         "description": "Design and build useful, welcoming websites.",
         "likes": 0,
     },
+    {
+        "id": 3,
+        "title": "make apps",
+        "description": "Design and build useful, welcoming apps.",
+        "likes": 0,
+    },#hand-edited by SG
+    
+    {
+        "id": 4,
+        "title": "design helpful apps",
+        "description": "Turn creative ideas into useful digital tools.",
+        "likes": 0,
+    },  # hand-edited by SG
+
 ]
 
 

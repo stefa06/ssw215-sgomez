@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, jsonify, render_template, send_from_directory
 
 
 app = Flask(__name__)
@@ -8,7 +8,7 @@ app = Flask(__name__)
 projects_db = [
     {
         "id": 1,
-        "title": "My amazing Video Game Project.",
+        "title": "make video games",
         "description": "Create interactive games and bring playful ideas to life.",
         "likes": 0,
     },
@@ -18,19 +18,20 @@ projects_db = [
         "description": "Design and build useful, welcoming websites.",
         "likes": 0,
     },
+        # hand-edited by SG
     {
         "id": 3,
-        "title": "make apps",
-        "description": "Design and build useful, welcoming apps.",
-        "likes": 0,
-    },#hand-edited by SG
-    
+        "title": "build mobile apps",
+        "description": "Create helpful apps for phones and tablets.",
+        "likes": 0
+    },
+    # hand-edited by SG
     {
         "id": 4,
         "title": "design helpful apps",
         "description": "Turn creative ideas into useful digital tools.",
-        "likes": 0,
-    },  # hand-edited by SG
+        "likes": 0
+    }
 
 ]
 
@@ -38,6 +39,16 @@ projects_db = [
 @app.get("/")
 def index():
     return render_template("index.html", projects=projects_db)
+
+
+@app.post("/api/projects/<int:project_id>/upvote")
+def upvote_project(project_id):
+    project = next((item for item in projects_db if item["id"] == project_id), None)
+    if project is None:
+        return jsonify(error="Project not found"), 404
+
+    project["likes"] += 1
+    return jsonify(likes=project["likes"])
 
 
 @app.get("/assets/<path:filename>")

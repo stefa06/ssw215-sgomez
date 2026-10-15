@@ -31,3 +31,34 @@ filterInput.addEventListener("input", () => {
       .map((card) => card.querySelector(".card__title").textContent.trim()),
   );
 });
+
+for (const card of projectCards) {
+  const projectId = card.dataset.projectId;
+  const upvoteButton = card.querySelector(".upvote-btn");
+  const likeCount = card.querySelector(".like-count");
+
+  if (!projectId || !(upvoteButton instanceof HTMLButtonElement) || !(likeCount instanceof HTMLElement)) {
+    throw new Error("Each project card must have an id, an upvote button, and a like count.");
+  }
+
+  upvoteButton.addEventListener("click", async () => {
+    upvoteButton.disabled = true;
+
+    try {
+      const response = await fetch(`/api/projects/${projectId}/upvote`, { method: 'POST' });
+      if (!response.ok) {
+        throw new Error(`Upvote request failed with status ${response.status}.`);
+      }
+
+      const data = await response.json();
+      if (!Number.isInteger(data.likes)) {
+        throw new Error("The upvote response did not include an integer like count.");
+      }
+      likeCount.textContent = String(data.likes);
+    } catch (error) {
+      console.error("Failed to upvote project:", error);
+    } finally {
+      upvoteButton.disabled = false;
+    }
+  });
+}

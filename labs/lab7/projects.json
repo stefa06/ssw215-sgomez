@@ -1,0 +1,29 @@
+projects_db = [
+    {
+        "id": 1,
+        "title": "make video games",
+        "description": "Create interactive games and bring playful ideas to life.",
+        "likes": 0,
+    },
+    {
+        "id": 2,
+        "title": "make websites",
+        "description": "Design and build useful, welcoming websites.",
+        "likes": 0,
+    },
+        
+    {
+        "id": 3,
+        "title": "build mobile apps",
+        "description": "Create helpful apps for phones and tablets.",
+        "likes": 0
+    },
+    
+    {
+        "id": 4,
+        "title": "design helpful apps",
+        "description": "Turn creative ideas into useful digital tools.",
+        "likes": 0
+    }
+
+]

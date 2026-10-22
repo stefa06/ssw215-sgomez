@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stefania Gomez | Portfolio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+  </head>
+  <body class="page">
+    <header class="site-header">
+      <nav class="site-nav" aria-label="Main navigation">
+        <ul class="site-nav__list">
+          <li><a class="site-nav__link" href="#projects">Projects</a></li>
+          <li>
+            <a class="site-nav__link" href="https://github.com/stefaniagomez" target="_blank" rel="noopener">
+              GitHub
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero__content">
+          <h1 class="hero__title" id="hero-title">Stefania Gomez</h1>
+          <p class="subtitle">I dance professionaly</p>
+          <p class="bio">I'm from Spain and Colombia. I love pasta</p>
+          <div class="hero__actions">
+            <a class="button button--primary" href="#projects">
+              See my projects
+            </a>
+            <button class="button button--disabled" type="button" disabled>
+              Contact me (coming soon)
+            </button>
+          </div>
+        </div>
+        <img class="avatar" src="./assets/avatar.jpg" alt="Stefania Gomez">
+      </section>
+    </header>
+
+    <main class="main-content">
+      <section class="projects" id="projects" aria-labelledby="projects-title" tabindex="-1">
+        <h2 class="section-title" id="projects-title">Projects</h2>
+        <div class="project-filter">
+          <label class="project-filter__label" for="filter-input">Filter projects</label>
+          <input class="project-filter__input" id="filter-input" type="text">
+        </div>
+        <p class="project-count" id="project-count" aria-live="polite">
+          Showing {{ projects|length }} of {{ projects|length }} projects
+        </p>
+        <div class="project-cards">
+          {% for project in projects %}
+          <article class="card" data-project-id="{{ project.id }}">
+            <h3 class="card__title">{{ project.title }}</h3>
+            <p>{{ project.description }}</p>
+            {% if project.likes > 10 %}
+            <p class="trending-badge">Trending</p>
+            {% endif %}
+            <p><span class="like-count">{{ project.likes }}</span> likes</p>
+            <button class="button upvote-btn" type="button">Upvote</button>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p class="site-footer__text">Portfolio of Stefania Gomez</p>
+    </footer>
+  </body>
+</html>

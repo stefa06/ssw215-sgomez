@@ -44,6 +44,11 @@
           <label class="project-filter__label" for="filter-input">Filter projects</label>
           <input class="project-filter__input" id="filter-input" type="text">
         </div>
+        <form class="project-create">
+          <label class="project-filter__label" for="new-title">New project title</label>
+          <input class="project-filter__input" id="new-title" type="text">
+          <button class="button" type="submit">Add project</button>
+        </form>
         <p class="project-count" id="project-count" aria-live="polite">
           Showing {{ projects|length }} of {{ projects|length }} projects
         </p>

@@ -22,5 +22,11 @@
     "title": "design helpful apps",
     "description": "Turn creative ideas into useful digital tools.",
     "likes": 0
+  },
+  {
+    "id": 5,
+    "title": "practice project",
+    "description": "",
+    "likes": 0
   }
 ]

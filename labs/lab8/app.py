@@ -3,6 +3,7 @@ from pathlib import Path
 
 from flask import Flask, jsonify, render_template, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import inspect, text
 from sqlalchemy.exc import IntegrityError
 
 
@@ -18,6 +19,15 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 
+class Author(db.Model):
+    __tablename__ = "authors"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), nullable=False)
+
+    projects = db.relationship("Project", backref="author", lazy=True)
+
+
 class Project(db.Model):
     __tablename__ = "projects"
 
@@ -25,6 +35,11 @@ class Project(db.Model):
     title = db.Column(db.String(120), nullable=False, unique=True)
     description = db.Column(db.String(255), nullable=False, default="")
     likes = db.Column(db.Integer, nullable=False, default=0)
+    author_id = db.Column(
+        db.Integer,
+        db.ForeignKey("authors.id"),
+        nullable=False,
+    )
 
     def to_dict(self):
         return {
@@ -32,13 +47,53 @@ class Project(db.Model):
             "title": self.title,
             "description": self.description,
             "likes": self.likes,
+            "author_id": self.author_id,
+            "author_name": self.author.name if self.author else None,
         }
+
+
+def ensure_default_author():
+    author = Author.query.filter_by(name="Stefania Gomez").first()
+    if author is not None:
+        return author
+
+    author = Author(name="Stefania Gomez")
+    db.session.add(author)
+    db.session.commit()
+    return author
+
+
+def ensure_schema():
+    db.create_all()
+
+    project_table = inspect(db.engine).get_table_names()
+    if "projects" in project_table:
+        columns = [column["name"] for column in inspect(db.engine).get_columns("projects")]
+        if "author_id" not in columns:
+            db.session.execute(text("ALTER TABLE projects ADD COLUMN author_id INTEGER"))
+            author = ensure_default_author()
+            db.session.execute(
+                text("UPDATE projects SET author_id = :author_id WHERE author_id IS NULL"),
+                {"author_id": author.id},
+            )
+            db.session.commit()
+
+    if Author.query.first() is None:
+        ensure_default_author()
+
+    projects_missing_author = Project.query.filter(Project.author_id.is_(None)).all()
+    if projects_missing_author:
+        default_author = ensure_default_author()
+        for project in projects_missing_author:
+            project.author_id = default_author.id
+        db.session.commit()
 
 
 def init_seed_data():
     if Project.query.first() is not None:
         return
 
+    author = ensure_default_author()
     seed_path = Path(__file__).resolve().parent / "projects_seed.json"
     with seed_path.open(encoding="utf-8") as seed_file:
         seed_projects = json.load(seed_file)
@@ -48,6 +103,7 @@ def init_seed_data():
             title=project_data["title"],
             description=project_data.get("description", ""),
             likes=int(project_data.get("likes", 0)),
+            author_id=author.id,
         )
         db.session.add(project)
 
@@ -56,7 +112,7 @@ def init_seed_data():
 
 with app.app_context():
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
-    db.create_all()
+    ensure_schema()
     init_seed_data()
 
 
@@ -86,7 +142,8 @@ def create_project():
     if not trimmed_title:
         return jsonify(error="A project title is required."), 400
 
-    project = Project(title=trimmed_title, description="", likes=0)
+    author = ensure_default_author()
+    project = Project(title=trimmed_title, description="", likes=0, author_id=author.id)
     try:
         db.session.add(project)
         db.session.commit()

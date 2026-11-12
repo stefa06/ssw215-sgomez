@@ -18,7 +18,6 @@
   - an integer primary key;
   - a non-empty title;
   - a description;
-  - a category;
   - technologies;
   - a GitHub URL.
 - Project data MUST remain available after the server restarts.
@@ -46,8 +45,8 @@
 - The projects section MUST have a heading and display one card for each project in the
   database.
 - Each project MUST be displayed in an attractive pink-themed card.
-- Each card MUST show the project's title and category, and provide access to its
-  description, technologies, and GitHub URL.
+- Each card MUST show the project's title and provide access to its description,
+  technologies, and GitHub URL.
 - The layout MUST adapt to narrow screens without horizontal overflow.
 
 ## 5. Save Project Interaction
@@ -70,19 +69,16 @@
 - The expanded information MUST include the project's description, technologies, and
   GitHub URL.
 
-## 7. Search and Category Filtering
+## 7. Search
 - The projects section MUST provide a text search control with an associated label.
 - Search MUST update the visible project cards as the user types, without a page reload.
-- The projects section MUST provide a category filter based on each project's stored
-  category, including an option to show all categories.
-- Search and category filtering MUST work together.
 - The page MUST provide a clear status or result count, including when no projects
   match.
 
 ## 8. Add Project Form
 - The page MUST provide an "Add Project" form for the owner to add a project to the
   portfolio. No authentication or login system is required for this version.
-- The form MUST collect the title, description, category, technologies, and GitHub URL.
+- The form MUST collect the title, description, technologies, and GitHub URL.
 - Submitting valid data MUST save the project through the Flask application to SQLite
   and display the new project without requiring a manual page reload.
 - The form MUST provide a visible success or error message.
@@ -99,16 +95,14 @@
 ## 10. Acceptance Checklist
 - [ ] Starting the Flask server creates or connects to the SQLite database and renders
   one card for each project record.
-- [ ] Each project record includes a title, description, category, technologies, and
-  GitHub URL, and remains stored after a server restart.
+- [ ] Each project record includes a title, description, technologies, and GitHub URL,
+  and remains stored after a server restart.
 - [ ] Project cards use the pink-themed responsive design.
 - [ ] Save Project toggles the saved state, updates button text and `aria-pressed`, and
   updates the saved-project count.
 - [ ] More Details expands and collapses the additional information and updates
   `aria-expanded`.
 - [ ] Search filters projects as the user types.
-- [ ] Category filtering uses the category stored with each project; search and category
-  filtering can be combined.
 - [ ] The Add Project form saves valid projects to SQLite and shows the new card without
   a manual page reload.
 - [ ] Invalid project submissions produce a visible error and do not crash the server.

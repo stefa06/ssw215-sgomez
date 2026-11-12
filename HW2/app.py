@@ -36,7 +36,6 @@ class Project(db.Model):
     title = db.Column(db.String(120), nullable=False, unique=True)
     description = db.Column(db.String(255), nullable=False, default="")
     likes = db.Column(db.Integer, nullable=False, default=0)
-    category = db.Column(db.String(80), nullable=False, default="")
     technologies = db.Column(db.String(255), nullable=False, default="")
     github_url = db.Column(db.String(255), nullable=False, default="")
     author_id = db.Column(
@@ -50,7 +49,6 @@ class Project(db.Model):
             "id": self.id,
             "title": self.title,
             "description": self.description,
-            "category": self.category,
             "technologies": self.technologies,
             "github_url": self.github_url,
             "author_id": self.author_id,
@@ -87,7 +85,6 @@ def ensure_schema():
             db.session.commit()
 
         new_columns = {
-            "category": "VARCHAR(80)",
             "technologies": "VARCHAR(255)",
             "github_url": "VARCHAR(255)",
         }
@@ -125,7 +122,6 @@ def init_seed_data():
         project = Project(
             title=project_data["title"],
             description=project_data.get("description", ""),
-            category=project_data.get("category", ""),
             technologies=project_data.get("technologies", ""),
             github_url=project_data.get("github_url", ""),
             author_id=author.id,
@@ -162,7 +158,6 @@ def create_project():
     field_limits = {
         "title": 120,
         "description": 255,
-        "category": 80,
         "technologies": 255,
         "github_url": 255,
     }

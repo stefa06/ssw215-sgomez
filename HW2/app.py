@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from flask import Flask, jsonify, render_template, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
@@ -35,6 +36,9 @@ class Project(db.Model):
     title = db.Column(db.String(120), nullable=False, unique=True)
     description = db.Column(db.String(255), nullable=False, default="")
     likes = db.Column(db.Integer, nullable=False, default=0)
+    category = db.Column(db.String(80), nullable=False, default="")
+    technologies = db.Column(db.String(255), nullable=False, default="")
+    github_url = db.Column(db.String(255), nullable=False, default="")
     author_id = db.Column(
         db.Integer,
         db.ForeignKey("authors.id"),
@@ -46,7 +50,9 @@ class Project(db.Model):
             "id": self.id,
             "title": self.title,
             "description": self.description,
-            "likes": self.likes,
+            "category": self.category,
+            "technologies": self.technologies,
+            "github_url": self.github_url,
             "author_id": self.author_id,
             "author_name": self.author.name if self.author else None,
         }
@@ -68,7 +74,9 @@ def ensure_schema():
 
     project_table = inspect(db.engine).get_table_names()
     if "projects" in project_table:
-        columns = [column["name"] for column in inspect(db.engine).get_columns("projects")]
+        columns = {
+            column["name"] for column in inspect(db.engine).get_columns("projects")
+        }
         if "author_id" not in columns:
             db.session.execute(text("ALTER TABLE projects ADD COLUMN author_id INTEGER"))
             author = ensure_default_author()
@@ -77,6 +85,21 @@ def ensure_schema():
                 {"author_id": author.id},
             )
             db.session.commit()
+
+        new_columns = {
+            "category": "VARCHAR(80)",
+            "technologies": "VARCHAR(255)",
+            "github_url": "VARCHAR(255)",
+        }
+        for column_name, column_type in new_columns.items():
+            if column_name not in columns:
+                db.session.execute(
+                    text(
+                        f"ALTER TABLE projects ADD COLUMN {column_name} "
+                        f"{column_type} NOT NULL DEFAULT ''"
+                    )
+                )
+        db.session.commit()
 
     if Author.query.first() is None:
         ensure_default_author()
@@ -102,7 +125,9 @@ def init_seed_data():
         project = Project(
             title=project_data["title"],
             description=project_data.get("description", ""),
-            likes=int(project_data.get("likes", 0)),
+            category=project_data.get("category", ""),
+            technologies=project_data.get("technologies", ""),
+            github_url=project_data.get("github_url", ""),
             author_id=author.id,
         )
         db.session.add(project)
@@ -132,18 +157,44 @@ def list_projects():
 def create_project():
     data = request.get_json(silent=True)
     if not isinstance(data, dict):
-        return jsonify(error="A project title is required."), 400
+        return jsonify(error="Project data must be a JSON object."), 400
 
-    title = data.get("title")
-    if not isinstance(title, str):
-        return jsonify(error="A project title is required."), 400
+    field_limits = {
+        "title": 120,
+        "description": 255,
+        "category": 80,
+        "technologies": 255,
+        "github_url": 255,
+    }
+    project_data = {}
+    for field_name, max_length in field_limits.items():
+        value = data.get(field_name)
+        if not isinstance(value, str) or not value.strip():
+            return jsonify(error=f"A non-empty {field_name} is required."), 400
 
-    trimmed_title = title.strip()
-    if not trimmed_title:
-        return jsonify(error="A project title is required."), 400
+        value = value.strip()
+        if len(value) > max_length:
+            return (
+                jsonify(error=f"{field_name} must be {max_length} characters or fewer."),
+                400,
+            )
+        project_data[field_name] = value
+
+    try:
+        github_url = urlsplit(project_data["github_url"])
+        valid_github_url = (
+            github_url.scheme == "https"
+            and github_url.hostname == "github.com"
+            and bool(github_url.path.strip("/"))
+        )
+    except ValueError:
+        valid_github_url = False
+
+    if not valid_github_url:
+        return jsonify(error="github_url must be a valid https://github.com/ URL."), 400
 
     author = ensure_default_author()
-    project = Project(title=trimmed_title, description="", likes=0, author_id=author.id)
+    project = Project(**project_data, author_id=author.id)
     try:
         db.session.add(project)
         db.session.commit()
@@ -152,22 +203,6 @@ def create_project():
         return jsonify(error="Project title already exists."), 400
 
     return jsonify(project.to_dict()), 201
-
-
-@app.post("/api/projects/<int:project_id>/upvote")
-def upvote_project(project_id):
-    project = db.session.get(Project, project_id)
-    if project is None:
-        return jsonify(error="Project not found"), 404
-
-    project.likes += 1
-    try:
-        db.session.commit()
-    except IntegrityError:
-        db.session.rollback()
-        return jsonify(error="Unable to update likes."), 400
-
-    return jsonify(likes=project.likes)
 
 
 @app.get("/assets/<path:filename>")

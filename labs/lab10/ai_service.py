@@ -153,6 +153,22 @@ def refine_github_import(session_id: str, feedback: str) -> GitHubProjectDraft:
     return response
 
 
+def refine_github_import_blind(
+    session_id: str,
+    feedback: str,
+) -> GitHubProjectDraft:
+    if session_id not in github_sessions:
+        raise GitHubSessionNotFoundError
+
+    response = _request_structured_response(
+        [{"role": "user", "content": feedback}],
+        GitHubProjectDraft,
+    )
+    if not isinstance(response, GitHubProjectDraft):
+        raise ValueError("The AI service returned an invalid GitHub project draft.")
+    return response
+
+
 def get_github_draft(session_id: str) -> GitHubProjectDraft:
     session = github_sessions.get(session_id)
     if session is None:
